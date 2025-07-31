@@ -5,10 +5,18 @@
   "main": "tr808-mvp.html",
   "scripts": {
     "dev": "npx live-server --port=3000 --open=tr808-mvp.html",
-    "build": "echo 'Build process to be implemented'",
+    "build": "mkdir -p dist && cp tr808-mvp.html dist/index.html",
     "test": "echo 'Tests to be implemented'",
     "format": "prettier --write *.html *.css *.js",
-    "lint": "echo 'Linting to be implemented'"
+    "lint": "echo 'Linting to be implemented'",
+    "docker:build": "docker build -t tr808-drum:local .",
+    "docker:run": "docker run -d --name tr808-local -p 3000:80 tr808-drum:local",
+    "docker:stop": "docker stop tr808-local && docker rm tr808-local",
+    "deploy:staging": "./scripts/deploy/staging-deploy.sh",
+    "deploy:production": "./scripts/deploy/production-deploy.sh",
+    "compose:up": "docker-compose up -d",
+    "compose:down": "docker-compose down",
+    "compose:logs": "docker-compose logs -f"
   },
   "repository": {
     "type": "git",
