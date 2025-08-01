@@ -4,7 +4,7 @@
   "description": "Web-based TR-808 drum machine with AI pattern generation",
   "main": "tr808-mvp.html",
   "scripts": {
-    "dev": "npx live-server --port=3000 --open=tr808-mvp.html",
+    "dev": "npx live-server --port=3000 --host=0.0.0.0 --entry-file=tr808-mvp.html --no-browser",
     "build": "mkdir -p dist && cp tr808-mvp.html dist/index.html",
     "test": "echo 'Tests to be implemented'",
     "format": "prettier --write *.html *.css *.js",

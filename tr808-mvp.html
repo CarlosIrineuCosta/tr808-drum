@@ -192,6 +192,33 @@
             gap: 15px;
         }
 
+        .kit-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kit-selector {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            padding: 6px 12px;
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .kit-selector:hover {
+            border-color: var(--accent);
+        }
+
+        .kit-selector option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
         .tempo-slider {
             -webkit-appearance: none;
             width: 150px;
@@ -223,7 +250,7 @@
 
         .track {
             display: grid;
-            grid-template-columns: 60px 40px 30px repeat(16, 1fr);
+            grid-template-columns: 60px 50px 35px repeat(16, 1fr);
             gap: 3px;
             align-items: center;
             margin-bottom: 12px;
@@ -241,16 +268,23 @@
             letter-spacing: 1px;
         }
 
-        .volume-control {
+        .volume-pan-controls {
             display: flex;
+            flex-direction: column;
+            gap: 4px;
             align-items: center;
-            gap: 3px;
         }
 
-        .volume-slider {
+        .volume-control, .pan-control {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .volume-slider, .pan-slider {
             -webkit-appearance: none;
-            width: 30px;
-            height: 3px;
+            width: 35px;
+            height: 4px;
             background: var(--bg-primary);
             border-radius: 2px;
             outline: none;
@@ -258,9 +292,18 @@
 
         .volume-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .pan-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 10px;
+            background: var(--text-secondary);
             border-radius: 50%;
             cursor: pointer;
         }
@@ -419,7 +462,7 @@
             }
             
             .track {
-                grid-template-columns: 50px 30px 25px repeat(16, 1fr);
+                grid-template-columns: 50px 45px 30px repeat(16, 1fr);
             }
             
             .logo {
@@ -476,6 +519,17 @@
                 <input type="range" class="tempo-slider" id="tempoSlider" min="60" max="200" value="120" />
                 <button class="btn" id="tapBtn">TAP</button>
             </div>
+            
+            <div class="kit-section">
+                <span>KIT</span>
+                <select class="kit-selector" id="kitSelector">
+                    <option value="classic808">Classic 808</option>
+                    <option value="tr808">TR-808 Samples</option>
+                    <option value="tr909">TR-909</option>
+                    <option value="linndrm">LinnDrum</option>
+                </select>
+                <button class="btn" id="uploadBtn">📁 Load</button>
+            </div>
         </div>
 
         <div class="sequencer" id="sequencer">
@@ -503,6 +557,84 @@
             { id: 'ch', name: 'CH', fullName: 'Closed Hat' },
             { id: 'oh', name: 'OH', fullName: 'Open Hat' }
         ];
+
+        // Kit definitions with sample URLs
+        const kitDefinitions = {
+            classic808: {
+                name: 'Classic 808',
+                type: 'synthetic', // Use current Tone.js synths
+                samples: null
+            },
+            tr808: {
+                name: 'TR-808',
+                type: 'samples',
+                samples: {
+                    bd: 'samples/tr808/BD/BD0000.WAV',
+                    sd: 'samples/tr808/SD/SD0000.WAV',
+                    lt: 'samples/tr808/LT/LT00.WAV',
+                    mt: 'samples/tr808/MT/MT00.WAV',
+                    ht: 'samples/tr808/HT/HT00.WAV',
+                    rs: 'samples/tr808/RS/RS.WAV',
+                    ch: 'samples/tr808/CH/CH.WAV',
+                    oh: 'samples/tr808/OH/OH00.WAV'
+                }
+            },
+            tr909: {
+                name: 'TR-909',
+                type: 'samples',
+                samples: {
+                    bd: 'samples/tr909/BT0A0A7.WAV',
+                    sd: 'samples/tr909/ST0T0S0.WAV',
+                    lt: 'samples/tr909/LT0D0.WAV',
+                    mt: 'samples/tr909/MT0D0.WAV',
+                    ht: 'samples/tr909/HT0D0.WAV',
+                    rs: 'samples/tr909/RIM127.WAV',
+                    ch: 'samples/tr909/HHCD0.WAV',
+                    oh: 'samples/tr909/HHOD0.WAV'
+                }
+            },
+            linndrm: {
+                name: 'LinnDrum',
+                type: 'samples',
+                samples: {
+                    bd: 'samples/linndrm/kick.wav',
+                    sd: 'samples/linndrm/sd.wav',
+                    lt: 'samples/linndrm/toml.wav',
+                    mt: 'samples/linndrm/tom.wav',
+                    ht: 'samples/linndrm/tomh.wav',
+                    rs: 'samples/linndrm/sd.wav', // Using snare for rimshot
+                    ch: 'samples/linndrm/sstl.wav', // Using sideStick low for closed hat
+                    oh: 'samples/linndrm/ssth.wav'  // Using sideStick high for open hat
+                }
+            }
+        };
+
+        // IndexedDB setup for sample storage
+        function initSampleDatabase() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('TR808_SampleDB', 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    sampleDatabase = request.result;
+                    resolve(sampleDatabase);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    
+                    // Create stores if they don't exist
+                    if (!db.objectStoreNames.contains('samples')) {
+                        const sampleStore = db.createObjectStore('samples', { keyPath: 'id' });
+                        sampleStore.createIndex('kitId', 'kitId', { unique: false });
+                    }
+                    
+                    if (!db.objectStoreNames.contains('kits')) {
+                        db.createObjectStore('kits', { keyPath: 'id' });
+                    }
+                };
+            });
+        }
 
         // Pattern database with classic rhythms
         const patternDatabase = {
@@ -588,6 +720,127 @@
             }
         };
 
+        // Sample loading and kit management functions
+        async function loadSampleFromURL(url, instId, kitId) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
+                
+                const arrayBuffer = await response.arrayBuffer();
+                const audioBuffer = await Tone.getContext().decodeAudioData(arrayBuffer);
+                
+                // Store in IndexedDB
+                if (sampleDatabase) {
+                    const transaction = sampleDatabase.transaction(['samples'], 'readwrite');
+                    const store = transaction.objectStore('samples');
+                    await store.put({
+                        id: `${kitId}_${instId}`,
+                        kitId: kitId,
+                        instId: instId,
+                        audioBuffer: audioBuffer,
+                        url: url,
+                        timestamp: Date.now()
+                    });
+                }
+                
+                return audioBuffer;
+            } catch (error) {
+                console.error(`Failed to load sample for ${instId}:`, error);
+                return null;
+            }
+        }
+
+        async function loadKit(kitId) {
+            const kit = kitDefinitions[kitId];
+            if (!kit) {
+                console.error(`Kit not found: ${kitId}`);
+                return false;
+            }
+
+            showStatus(`Loading ${kit.name}...`);
+            
+            try {
+                if (kit.type === 'synthetic') {
+                    // Keep current synthetic drums
+                    currentKit = kitId;
+                    showStatus(`${kit.name} loaded`);
+                    return true;
+                }
+
+                // Load sample-based kit directly with URLs
+                const newDrums = {};
+                const loadPromises = [];
+                
+                instruments.forEach(inst => {
+                    const sampleUrl = kit.samples[inst.id];
+                    if (sampleUrl) {
+                        // Create player with URL directly
+                        const loadPromise = new Promise((resolve, reject) => {
+                            const player = new Tone.Player({
+                                url: sampleUrl,
+                                onload: () => {
+                                    console.log(`Loaded sample for ${inst.id}: ${sampleUrl}`);
+                                    resolve(player);
+                                },
+                                onerror: (error) => {
+                                    console.error(`Failed to load sample for ${inst.id}:`, error);
+                                    reject(error);
+                                }
+                            }).connect(panners[inst.id]);
+                            
+                            player.volume.value = Tone.gainToDb(volumes[inst.id]);
+                            newDrums[inst.id] = player;
+                        });
+                        
+                        loadPromises.push(loadPromise);
+                    }
+                });
+                
+                // Wait for all samples to load
+                await Promise.all(loadPromises);
+
+                // Replace old drums
+                Object.keys(drums).forEach(key => {
+                    if (drums[key]) {
+                        drums[key].dispose();
+                    }
+                });
+                
+                Object.assign(drums, newDrums);
+                currentKit = kitId;
+                
+                showStatus(`${kit.name} loaded successfully`);
+                return true;
+                
+            } catch (error) {
+                console.error('Failed to load kit:', error);
+                showStatus(`Failed to load ${kit.name}`);
+                return false;
+            }
+        }
+
+        async function switchKit(kitId) {
+            if (currentKit === kitId) return;
+            
+            // Stop playback during kit switch
+            const wasPlaying = isPlaying;
+            if (wasPlaying) {
+                stopSequencer();
+            }
+            
+            const success = await loadKit(kitId);
+            if (success) {
+                // Update UI
+                const selector = document.getElementById('kitSelector');
+                if (selector) selector.value = kitId;
+                
+                // Restart playback if it was playing
+                if (wasPlaying) {
+                    playSequencer();
+                }
+            }
+        }
+
         // Application state
         let isPlaying = false;
         let currentStep = 0;
@@ -595,18 +848,26 @@
         let pattern = {};
         let accents = {};
         let volumes = {};
+        let pans = {};
         let muted = {};
         let soloed = {};
         let tapTimes = [];
 
         // Tone.js instruments
         let drums = {};
+        let panners = {};
+        
+        // Sample loading system
+        let currentKit = 'classic808';
+        let availableKits = {};
+        let sampleDatabase = null;
 
         // Initialize pattern and accents
         instruments.forEach(inst => {
             pattern[inst.id] = new Array(STEPS).fill(0);
             accents[inst.id] = new Array(STEPS).fill(false);
             volumes[inst.id] = 0.7;
+            pans[inst.id] = 0; // Center pan
             muted[inst.id] = false;
             soloed[inst.id] = false;
         });
@@ -615,58 +876,64 @@
         async function initializeAudio() {
             await Tone.start();
             
+            // Create panners for each instrument
+            instruments.forEach(inst => {
+                panners[inst.id] = new Tone.Panner(0); // Start with center pan
+                panners[inst.id].toDestination();
+            });
+
             drums = {
                 bd: new Tone.MembraneSynth({
                     pitchDecay: 0.05,
                     octaves: 10,
                     oscillator: { type: "sine" },
                     envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-                }).toDestination(),
+                }).connect(panners.bd),
                 
                 sd: new Tone.NoiseSynth({
                     noise: { type: "white" },
                     envelope: { attack: 0.005, decay: 0.1, sustain: 0.1, release: 0.1 }
-                }).toDestination(),
+                }).connect(panners.sd),
                 
                 lt: new Tone.MembraneSynth({
                     pitchDecay: 0.008,
                     octaves: 2,
                     oscillator: { type: "sine" },
                     envelope: { attack: 0.006, decay: 0.5, sustain: 0.1, release: 1 }
-                }).toDestination(),
+                }).connect(panners.lt),
                 
                 mt: new Tone.MembraneSynth({
                     pitchDecay: 0.008,
                     octaves: 2,
                     oscillator: { type: "sine" },
                     envelope: { attack: 0.006, decay: 0.3, sustain: 0.1, release: 0.8 }
-                }).toDestination(),
+                }).connect(panners.mt),
                 
                 ht: new Tone.MembraneSynth({
                     pitchDecay: 0.008,
                     octaves: 2,
                     oscillator: { type: "sine" },
                     envelope: { attack: 0.006, decay: 0.2, sustain: 0.1, release: 0.5 }
-                }).toDestination(),
+                }).connect(panners.ht),
                 
                 rs: new Tone.NoiseSynth({
                     noise: { type: "white" },
                     envelope: { attack: 0.001, decay: 0.05, sustain: 0.05, release: 0.05 }
-                }).toDestination(),
+                }).connect(panners.rs),
                 
                 ch: new Tone.NoiseSynth({
                     noise: { type: "white" },
                     envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 },
                     filter: { frequency: 8000, type: "highpass" },
                     volume: -10
-                }).toDestination(),
+                }).connect(panners.ch),
                 
                 oh: new Tone.NoiseSynth({
                     noise: { type: "white" },
                     envelope: { attack: 0.001, decay: 0.3, sustain: 0, release: 0.2 },
                     filter: { frequency: 6000, type: "highpass" },
                     volume: -8
-                }).toDestination()
+                }).connect(panners.oh)
             };
 
             // Set initial volumes
@@ -675,9 +942,9 @@
             });
         }
 
-        // Update track volume considering mute/solo state
+        // Update track volume and pan considering mute/solo state
         function updateTrackVolume(instId) {
-            if (!drums[instId]) return;
+            if (!drums[instId] || !panners[instId]) return;
             
             const isSoloed = Object.values(soloed).some(s => s);
             const shouldPlay = !muted[instId] && (!isSoloed || soloed[instId]);
@@ -687,6 +954,9 @@
             } else {
                 drums[instId].volume.value = -Infinity;
             }
+            
+            // Set panning (-1 to 1, where 0 is center)
+            panners[instId].pan.value = pans[instId];
         }
 
         // Toggle mute
@@ -797,6 +1067,10 @@
                 label.title = inst.fullName;
                 track.appendChild(label);
                 
+                // Combined Volume/Pan controls
+                const volumePanControls = document.createElement('div');
+                volumePanControls.className = 'volume-pan-controls';
+                
                 // Volume control
                 const volumeControl = document.createElement('div');
                 volumeControl.className = 'volume-control';
@@ -807,12 +1081,33 @@
                 volumeSlider.max = '1';
                 volumeSlider.step = '0.1';
                 volumeSlider.value = volumes[inst.id];
+                volumeSlider.title = 'Volume';
                 volumeSlider.addEventListener('input', (e) => {
                     volumes[inst.id] = parseFloat(e.target.value);
                     updateTrackVolume(inst.id);
                 });
                 volumeControl.appendChild(volumeSlider);
-                track.appendChild(volumeControl);
+                
+                // Pan control
+                const panControl = document.createElement('div');
+                panControl.className = 'pan-control';
+                const panSlider = document.createElement('input');
+                panSlider.type = 'range';
+                panSlider.className = 'pan-slider';
+                panSlider.min = '-1';
+                panSlider.max = '1';
+                panSlider.step = '0.1';
+                panSlider.value = pans[inst.id];
+                panSlider.title = 'Pan';
+                panSlider.addEventListener('input', (e) => {
+                    pans[inst.id] = parseFloat(e.target.value);
+                    updateTrackVolume(inst.id);
+                });
+                panControl.appendChild(panSlider);
+                
+                volumePanControls.appendChild(volumeControl);
+                volumePanControls.appendChild(panControl);
+                track.appendChild(volumePanControls);
                 
                 // Mute/Solo controls
                 const muteSoloControls = document.createElement('div');
@@ -859,38 +1154,49 @@
 
 
 
-        // Play sound
+        // Play sound - works with both synthetic drums and samples
         function playSound(inst, isAccent = false) {
             if (!drums[inst]) return;
             
             const now = Tone.now();
             const velocity = isAccent ? 1.0 : 0.7;
             
-            switch(inst) {
-                case 'bd':
-                    drums[inst].triggerAttackRelease('C1', '8n', now, velocity);
-                    break;
-                case 'sd':
-                    drums[inst].triggerAttackRelease('8n', now, velocity);
-                    break;
-                case 'lt':
-                    drums[inst].triggerAttackRelease('G2', '8n', now, velocity);
-                    break;
-                case 'mt':
-                    drums[inst].triggerAttackRelease('C3', '8n', now, velocity);
-                    break;
-                case 'ht':
-                    drums[inst].triggerAttackRelease('F3', '8n', now, velocity);
-                    break;
-                case 'rs':
-                    drums[inst].triggerAttackRelease('16n', now, velocity);
-                    break;
-                case 'ch':
-                    drums[inst].triggerAttackRelease('32n', now, velocity);
-                    break;
-                case 'oh':
-                    drums[inst].triggerAttackRelease('16n', now, velocity);
-                    break;
+            // Check if this is a sample player (Tone.Player) or synthetic drum
+            if (drums[inst] instanceof Tone.Player) {
+                // Sample-based drum - just start playback
+                if (drums[inst].loaded) {
+                    drums[inst].start(now);
+                } else {
+                    console.warn(`Sample not loaded for ${inst}`);
+                }
+            } else {
+                // Synthetic drum - use original triggering method
+                switch(inst) {
+                    case 'bd':
+                        drums[inst].triggerAttackRelease('C1', '8n', now, velocity);
+                        break;
+                    case 'sd':
+                        drums[inst].triggerAttackRelease('8n', now, velocity);
+                        break;
+                    case 'lt':
+                        drums[inst].triggerAttackRelease('G2', '8n', now, velocity);
+                        break;
+                    case 'mt':
+                        drums[inst].triggerAttackRelease('C3', '8n', now, velocity);
+                        break;
+                    case 'ht':
+                        drums[inst].triggerAttackRelease('F3', '8n', now, velocity);
+                        break;
+                    case 'rs':
+                        drums[inst].triggerAttackRelease('16n', now, velocity);
+                        break;
+                    case 'ch':
+                        drums[inst].triggerAttackRelease('32n', now, velocity);
+                        break;
+                    case 'oh':
+                        drums[inst].triggerAttackRelease('16n', now, velocity);
+                        break;
+                }
             }
         }
 
@@ -1150,6 +1456,23 @@ Make it musically appropriate for the described style. NO OTHER TEXT.`;
         createSequencer();
         updateTempoDisplay(120);
         showStatus('TR-808 AI Ready');
+
+        // Initialize database
+        initSampleDatabase().then(() => {
+            console.log('Sample database initialized');
+        }).catch(error => {
+            console.error('Failed to initialize sample database:', error);
+        });
+
+        // Kit selector event listener
+        document.getElementById('kitSelector').addEventListener('change', (e) => {
+            switchKit(e.target.value);
+        });
+
+        // Upload button event listener (placeholder)
+        document.getElementById('uploadBtn').addEventListener('click', () => {
+            showStatus('File upload coming soon!');
+        });
 
         // Initialize audio context on first user interaction
         document.addEventListener('click', initializeAudio, { once: true });
