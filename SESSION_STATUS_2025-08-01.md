@@ -38,10 +38,13 @@
 ## Next Session Priorities 🎯
 
 ### **Priority 1: Content & Patterns (Recommended Start)**
+- [ ] **Fix Kit Switching During Playback** - Pause/resume instead of stopping completely
+- [ ] **Create Multiple 808 Kit Variations** - Use different 808 samples for "808 Classic", "808 Punchy", "808 Deep"
 - [ ] **Add Pattern Variations** - Create 3-4 variations per genre (Classic 808, Trap, Techno, etc.)
 - [ ] **Pattern Selector UI** - Dropdown or buttons to choose pattern variations
 - [ ] **Convert MIDI Patterns** - Import downloaded MIDI patterns to JavaScript objects
 - [ ] **Swing/Groove Control** - Add timing variations for more realistic feel
+- [ ] **Replace Poor Quality LinnDrum Samples** - Find better LinnDrum sample set
 
 ### **Priority 2: User Experience**
 - [ ] **File Upload Interface** - Allow users to upload custom samples (.wav, .mp3)
@@ -87,7 +90,18 @@ tr808-drum/
 - ✅ IndexedDB sample caching working
 
 ### **Known Issues:**
-- None critical - system is fully functional
+- **Kit switching during playback** - Pattern stops completely when changing kits mid-playback
+  - Current: Playback stops and user must restart manually
+  - Desired: Loop pauses during sample loading, then resumes automatically
+  - Makes testing different kits difficult during composition
+
+### **Improvement Notes:**
+- **Multiple 808 variations available** - Current samples include many 808 variations (BD0000, BD0010, etc.)
+  - Should create multiple 808 kit variations using different sample combinations
+  - Could offer "808 Classic", "808 Punchy", "808 Deep", etc.
+- **LinnDrum sample quality** - One or more samples sound poor quality
+  - Need to review and replace with better LinnDrum samples
+  - Current samples may need quality assessment
 
 ### **Development Server:**
 ```bash

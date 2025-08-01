@@ -166,10 +166,13 @@ Analytics: Google Analytics 4 + custom events
 ### **Next Development Priorities:**
 
 #### **Priority 1: Content & Patterns**
-1. Add pattern variations (3-4 per genre)
-2. Create pattern selector UI
-3. Import MIDI patterns from downloaded packs
-4. Add swing/groove timing control
+1. **Fix kit switching during playback** - Pause/resume instead of stopping completely
+2. **Create multiple 808 kit variations** - Use different 808 samples for variety
+3. Add pattern variations (3-4 per genre)
+4. Create pattern selector UI
+5. Import MIDI patterns from downloaded packs
+6. Add swing/groove timing control
+7. **Replace poor quality LinnDrum samples** - Find better sample set
 
 #### **Priority 2: User Experience**
 5. File upload interface for custom samples
