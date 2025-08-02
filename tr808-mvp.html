@@ -90,24 +90,67 @@
             text-transform: uppercase;
         }
 
-        .lcd-display {
-            background: var(--lcd-bg);
-            border: 2px inset var(--border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-family: 'Share Tech Mono', monospace;
-            color: var(--lcd-text);
-            text-shadow: 0 0 5px var(--lcd-text);
-            min-width: 120px;
-            text-align: center;
-        }
-
-        .ai-section {
+        /* Pattern Activity Section - All Pattern-Related Controls */
+        .pattern-activity-section {
             background: linear-gradient(145deg, var(--bg-secondary), var(--bg-primary));
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        /* Compact AI Input */
+        .ai-input-compact {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .input-field-compact {
+            flex-grow: 1;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            outline: none;
+        }
+        
+        /* Compact Preset Grid */
+        .preset-grid-compact {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .preset-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            font-size: 10px;
+            border-radius: 4px;
+            min-width: 70px;
+        }
+        
+        .preset-btn:hover, .preset-btn.active {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+        
+        /* Pattern Controls */
+        .pattern-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
         }
 
         .ai-input {
@@ -181,21 +224,177 @@
             border: 1px solid var(--border);
         }
 
-        .transport-controls {
+        /* Transport Row Layout */
+        .transport-row {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+        
+        .transport-row:last-child {
+            margin-bottom: 0;
         }
 
-        .tempo-section {
+        /* Row 1: Playback Controls + Status */
+        .playback-row {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+        
+        .playback-controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .status-display {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        /* Compact Status Display */
+        .status-compact {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .tempo-compact {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent);
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .status-mini {
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--success);
+            text-align: center;
+        }
+
+        /* Row 2: Tempo Control */
+        .tempo-row {
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        .tempo-section-compact {
             display: flex;
             align-items: center;
             gap: 15px;
         }
+        
+        .control-label-small {
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--text-secondary);
+            min-width: 50px;
+        }
+        
+        .tempo-slider-compact {
+            width: 150px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            outline: none;
+        }
+        
+        .tempo-slider-compact::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+        
+        .btn-accent-small {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+            padding: 6px 12px;
+            font-size: 10px;
+        }
 
-        .kit-section {
+        /* Row 3: Sound Selection */
+        .selection-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .kit-section, .pattern-section {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+        
+        /* Control Labels */
+        .control-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-secondary);
+            min-width: 60px;
+        }
+
+        /* Button Variations */
+        .btn-primary {
+            background: var(--success);
+            color: var(--bg-primary);
+            border-color: var(--success);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+            border-color: var(--accent);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            color: var(--bg-primary);
+            border-color: var(--accent);
+        }
+        
+        .btn-accent:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+        
+        .btn-danger {
+            background: #ff4444;
+            color: white;
+            border-color: #ff4444;
+        }
+        
+        .btn-danger:hover {
+            background: #ff6666;
+            border-color: #ff6666;
         }
 
         .kit-selector {
@@ -478,57 +677,83 @@
                 <div class="logo">TR-808 AI</div>
                 <div class="model">RHYTHM COMPOSER • AI ENHANCED</div>
             </div>
-            <div class="lcd-display">
-                <div id="tempoDisplay">120 BPM</div>
-                <div id="statusDisplay">READY</div>
-            </div>
         </div>
 
-        <div class="ai-section">
-            <div class="ai-input">
+        <!-- Pattern Activity Row: Generate + Presets + Pattern Controls -->
+        <div class="pattern-activity-section">
+            <div class="ai-input-compact">
                 <input 
                     type="text" 
-                    class="input-field" 
+                    class="input-field-compact" 
                     id="beatInput" 
-                    placeholder="Describe your beat (e.g., 'classic 808 pattern', 'trap hi-hats', 'acid house')"
+                    placeholder="Describe your beat..."
                 />
-                <button class="btn" id="generateBtn">Generate</button>
+                <button class="btn btn-secondary" id="generateBtn">Generate</button>
             </div>
             
-            <div class="preset-grid">
-                <button class="btn" data-preset="classic808">Classic 808</button>
-                <button class="btn" data-preset="trap">Trap</button>
-                <button class="btn" data-preset="techno">Techno</button>
-                <button class="btn" data-preset="house">House</button>
-                <button class="btn" data-preset="breakbeat">Breakbeat</button>
-                <button class="btn" data-preset="latin">Latin</button>
-                <button class="btn" data-preset="funk">Funk</button>
-                <button class="btn" data-preset="dnb">D&B</button>
+            <div class="preset-grid-compact">
+                <button class="btn preset-btn" data-preset="classic808">Classic 808</button>
+                <button class="btn preset-btn" data-preset="trap">Trap</button>
+                <button class="btn preset-btn" data-preset="techno">Techno</button>
+                <button class="btn preset-btn" data-preset="house">House</button>
+                <button class="btn preset-btn" data-preset="breakbeat">Breakbeat</button>
+                <button class="btn preset-btn" data-preset="latin">Latin</button>
+                <button class="btn preset-btn" data-preset="funk">Funk</button>
+                <button class="btn preset-btn" data-preset="dnb">D&B</button>
+            </div>
+            
+            <div class="pattern-controls">
+                <select class="kit-selector" id="patternSelector">
+                    <option value="custom">Custom</option>
+                    <option value="hiphop_basic">Hip Hop Basic</option>
+                    <option value="hiphop_swing">Hip Hop Swing</option>
+                    <option value="trap_rolling">Trap Rolling</option>
+                    <option value="trap_triplets">Trap Triplets</option>
+                    <option value="oldschool">Old School</option>
+                    <option value="boom_bap">Boom Bap</option>
+                </select>
+                <button class="btn btn-danger" id="randomizeBtn">🎲 RANDOM</button>
+                <button class="btn btn-secondary" id="clearBtn">⌫ CLEAR</button>
             </div>
         </div>
 
         <div class="transport">
-            <div class="transport-controls">
-                <button class="btn" id="playBtn">▶ Play</button>
-                <button class="btn" id="stopBtn">⏹ Stop</button>
-                <button class="btn" id="clearBtn">⌫ Clear</button>
+            <!-- Row 1: Playback Controls + Compact Status -->
+            <div class="transport-row playback-row">
+                <div class="playback-controls">
+                    <button class="btn btn-primary" id="playBtn">▶ PLAY</button>
+                    <button class="btn btn-secondary" id="stopBtn">⏹ STOP</button>
+                </div>
+                <div class="status-compact">
+                    <div class="tempo-compact" id="tempoDisplay">120</div>
+                    <div class="status-mini" id="statusDisplay">READY</div>
+                </div>
             </div>
             
-            <div class="tempo-section">
-                <span>TEMPO</span>
-                <input type="range" class="tempo-slider" id="tempoSlider" min="60" max="200" value="120" />
-                <button class="btn" id="tapBtn">TAP</button>
+            <!-- Row 2: Tempo Control (Smaller) -->
+            <div class="transport-row tempo-row">
+                <div class="tempo-section-compact">
+                    <span class="control-label-small">TEMPO</span>
+                    <input type="range" class="tempo-slider-compact" id="tempoSlider" min="60" max="200" value="120" />
+                    <button class="btn btn-accent-small" id="tapBtn">TAP</button>
+                </div>
             </div>
             
-            <div class="kit-section">
-                <span>KIT</span>
-                <select class="kit-selector" id="kitSelector">
-                    <option value="classic808">Classic 808</option>
-                    <option value="tr808">TR-808 Samples</option>
-                    <option value="tr909">TR-909</option>
-                    <option value="linndrm">LinnDrum</option>
-                </select>
-                <button class="btn" id="uploadBtn">📁 Load</button>
+            <!-- Row 3: Kit Selection Only -->
+            <div class="transport-row selection-row">
+                <div class="kit-section">
+                    <span class="control-label">KIT</span>
+                    <select class="kit-selector" id="kitSelector">
+                        <option value="classic808">Classic 808</option>
+                        <option value="tr808_vintage">TR-808 Vintage</option>
+                        <option value="tr808_punch">TR-808 Punch</option>
+                        <option value="tr808_deep">TR-808 Deep</option>
+                        <option value="tr808_bright">TR-808 Bright</option>
+                        <option value="tr909">TR-909</option>
+                        <option value="linndrm">LinnDrum</option>
+                    </select>
+                    <button class="btn btn-secondary" id="uploadBtn">📁 LOAD</button>
+                </div>
             </div>
         </div>
 
@@ -565,8 +790,8 @@
                 type: 'synthetic', // Use current Tone.js synths
                 samples: null
             },
-            tr808: {
-                name: 'TR-808',
+            tr808_vintage: {
+                name: 'TR-808 Vintage',
                 type: 'samples',
                 samples: {
                     bd: 'samples/tr808/BD/BD0000.WAV',
@@ -577,6 +802,48 @@
                     rs: 'samples/tr808/RS/RS.WAV',
                     ch: 'samples/tr808/CH/CH.WAV',
                     oh: 'samples/tr808/OH/OH00.WAV'
+                }
+            },
+            tr808_punch: {
+                name: 'TR-808 Punch',
+                type: 'samples',
+                samples: {
+                    bd: 'samples/tr808/BD/BD2500.WAV',
+                    sd: 'samples/tr808/SD/SD2500.WAV',
+                    lt: 'samples/tr808/LT/LT25.WAV',
+                    mt: 'samples/tr808/MT/MT25.WAV',
+                    ht: 'samples/tr808/HT/HT25.WAV',
+                    rs: 'samples/tr808/RS/RS.WAV',
+                    ch: 'samples/tr808/CH/CH.WAV',
+                    oh: 'samples/tr808/OH/OH25.WAV'
+                }
+            },
+            tr808_deep: {
+                name: 'TR-808 Deep',
+                type: 'samples',
+                samples: {
+                    bd: 'samples/tr808/BD/BD5000.WAV',
+                    sd: 'samples/tr808/SD/SD5000.WAV',
+                    lt: 'samples/tr808/LT/LT50.WAV',
+                    mt: 'samples/tr808/MT/MT50.WAV',
+                    ht: 'samples/tr808/HT/HT50.WAV',
+                    rs: 'samples/tr808/RS/RS.WAV',
+                    ch: 'samples/tr808/CH/CH.WAV',
+                    oh: 'samples/tr808/OH/OH50.WAV'
+                }
+            },
+            tr808_bright: {
+                name: 'TR-808 Bright',
+                type: 'samples',
+                samples: {
+                    bd: 'samples/tr808/BD/BD7500.WAV',
+                    sd: 'samples/tr808/SD/SD7500.WAV',
+                    lt: 'samples/tr808/LT/LT75.WAV',
+                    mt: 'samples/tr808/MT/MT75.WAV',
+                    ht: 'samples/tr808/HT/HT75.WAV',
+                    rs: 'samples/tr808/RS/RS.WAV',
+                    ch: 'samples/tr808/CH/CH.WAV',
+                    oh: 'samples/tr808/OH/OH75.WAV'
                 }
             },
             tr909: {
@@ -717,6 +984,67 @@
                 rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 ch: [1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1],
                 oh: [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0]
+            },
+            // New patterns based on StudioBrootle hip hop patterns
+            hiphop_basic: {
+                bd: [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0], // Broken beat 808 kick
+                sd: [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], // Clap/snare on 2 and 4
+                lt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                mt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ht: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ch: [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0], // Hi-hat on every up and down beat
+                oh: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            },
+            hiphop_swing: {
+                bd: [1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,0], // Kicks close together at bar end
+                sd: [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], // Snare on 2 and 4
+                lt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                mt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ht: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ch: [1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1], // Basic hats + swing groove
+                oh: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            },
+            trap_rolling: {
+                bd: [1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0], // Trap kick pattern
+                sd: [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], // Snare on 2 and 4
+                lt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                mt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ht: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ch: [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1], // Rolling hi-hats (3 16th note loop)
+                oh: [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0]  // Open hats for accent
+            },
+            trap_triplets: {
+                bd: [1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0], // Trap kick
+                sd: [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], // Snare on 2 and 4
+                lt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                mt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ht: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ch: [1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0], // Triplet hats (3 quick instead of 1)
+                oh: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            },
+            oldschool: {
+                bd: [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0], // Simple kick
+                sd: [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], // Snare on 2 and 4
+                lt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                mt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ht: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ch: [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0], // One closed hat - simple
+                oh: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            },
+            boom_bap: {
+                bd: [1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0], // Doubled kicks
+                sd: [0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0], // Snare on 2 and 4
+                lt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                mt: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ht: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                rs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                ch: [1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1], // Open and closed hats + more repetition at bar end
+                oh: [0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0]
             }
         };
 
@@ -822,10 +1150,10 @@
         async function switchKit(kitId) {
             if (currentKit === kitId) return;
             
-            // Stop playback during kit switch
+            // Pause transport during kit switch (preserves timing)
             const wasPlaying = isPlaying;
             if (wasPlaying) {
-                stopSequencer();
+                Tone.Transport.pause();
             }
             
             const success = await loadKit(kitId);
@@ -834,9 +1162,9 @@
                 const selector = document.getElementById('kitSelector');
                 if (selector) selector.value = kitId;
                 
-                // Restart playback if it was playing
+                // Resume playback if it was playing
                 if (wasPlaying) {
-                    playSequencer();
+                    Tone.Transport.start();
                 }
             }
         }
@@ -1286,6 +1614,10 @@
                 return;
             }
             
+            // Show message about API key requirement
+            showStatus('AI generation requires Claude API key. Use pattern presets instead!');
+            return;
+            
             const btn = document.getElementById('generateBtn');
             btn.disabled = true;
             btn.textContent = 'Generating...';
@@ -1368,7 +1700,61 @@ Make it musically appropriate for the described style. NO OTHER TEXT.`;
                 });
                 updatePattern();
                 showStatus(`Loaded ${presetName} pattern`);
+                
+                // Update pattern selector to show current pattern
+                const selector = document.getElementById('patternSelector');
+                if (selector) selector.value = presetName;
             }
+        }
+
+        // Randomize pattern
+        function randomizePattern() {
+            instruments.forEach(inst => {
+                // Different randomization strategies per instrument
+                if (inst.id === 'bd') {
+                    // Kick: Higher probability on beats 1 and 3
+                    for (let i = 0; i < STEPS; i++) {
+                        if (i % 4 === 0 || i % 4 === 2) {
+                            pattern[inst.id][i] = Math.random() > 0.3 ? 1 : 0; // 70% chance
+                        } else {
+                            pattern[inst.id][i] = Math.random() > 0.8 ? 1 : 0; // 20% chance
+                        }
+                    }
+                } else if (inst.id === 'sd') {
+                    // Snare: Higher probability on beats 2 and 4
+                    for (let i = 0; i < STEPS; i++) {
+                        if (i % 8 === 4 || i % 8 === 12) {
+                            pattern[inst.id][i] = Math.random() > 0.2 ? 1 : 0; // 80% chance
+                        } else {
+                            pattern[inst.id][i] = Math.random() > 0.9 ? 1 : 0; // 10% chance
+                        }
+                    }
+                } else if (inst.id === 'ch') {
+                    // Closed hi-hat: More frequent
+                    for (let i = 0; i < STEPS; i++) {
+                        pattern[inst.id][i] = Math.random() > 0.4 ? 1 : 0; // 60% chance
+                    }
+                } else if (inst.id === 'oh') {
+                    // Open hi-hat: Less frequent
+                    for (let i = 0; i < STEPS; i++) {
+                        pattern[inst.id][i] = Math.random() > 0.85 ? 1 : 0; // 15% chance
+                    }
+                } else {
+                    // Other instruments: moderate randomization
+                    for (let i = 0; i < STEPS; i++) {
+                        pattern[inst.id][i] = Math.random() > 0.75 ? 1 : 0; // 25% chance
+                    }
+                }
+                // Reset accents
+                accents[inst.id].fill(false);
+            });
+            
+            updatePattern();
+            showStatus('Pattern randomized');
+            
+            // Set pattern selector to "custom"
+            const selector = document.getElementById('patternSelector');
+            if (selector) selector.value = 'custom';
         }
 
         // Tap tempo
@@ -1467,6 +1853,18 @@ Make it musically appropriate for the described style. NO OTHER TEXT.`;
         // Kit selector event listener
         document.getElementById('kitSelector').addEventListener('change', (e) => {
             switchKit(e.target.value);
+        });
+
+        // Pattern selector event listener
+        document.getElementById('patternSelector').addEventListener('change', (e) => {
+            if (e.target.value !== 'custom') {
+                loadPreset(e.target.value);
+            }
+        });
+
+        // Randomize button event listener
+        document.getElementById('randomizeBtn').addEventListener('click', () => {
+            randomizePattern();
         });
 
         // Upload button event listener (placeholder)

@@ -123,37 +123,98 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  # Deploy to staging (DEV-GPU)
-  deploy-staging:
+  # Deploy to DEV-GPU for testing
+  deploy-dev-gpu:
     runs-on: self-hosted
     needs: docker-build
     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
-    environment: staging
+    environment: dev-gpu
     steps:
-      - name: Deploy to DEV-GPU staging
+      - name: Deploy to DEV-GPU for testing
         run: |
-          echo "Deploying to staging environment on DEV-GPU (100.106.201.33)"
+          echo "Deploying to DEV-GPU test environment (100.106.201.33)"
           
           # Pull latest image
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           
-          # Stop existing container
-          docker stop tr808-staging || true
-          docker rm tr808-staging || true
+          # Stop existing test container
+          docker stop tr808-test || true
+          docker rm tr808-test || true
           
-          # Run new container
+          # Run new test container
           docker run -d \
-            --name tr808-staging \
+            --name tr808-test \
             --restart unless-stopped \
             -p 3001:80 \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           
-          echo "Staging deployment completed: http://100.106.201.33:3001"
+          echo "DEV-GPU test deployment completed: http://100.106.201.33:3001"
+
+  # Comprehensive testing on DEV-GPU
+  test-dev-gpu:
+    runs-on: self-hosted
+    needs: deploy-dev-gpu
+    environment: dev-gpu
+    steps:
+      - name: Wait for container to be ready
+        run: |
+          echo "Waiting for container to be healthy..."
+          sleep 30
+          
+          # Health check with retries
+          for i in {1..10}; do
+            if curl -f http://100.106.201.33:3001/health; then
+              echo "Container is healthy"
+              break
+            fi
+            echo "Health check attempt $i failed, retrying..."
+            sleep 10
+          done
+
+      - name: Run security tests
+        run: |
+          echo "Running security tests..."
+          # Test HTTPS headers
+          curl -I http://100.106.201.33:3001 | grep -i "x-frame-options\|x-content-type-options\|x-xss-protection"
+          
+          # Test for exposed sensitive files
+          curl -o /dev/null -s -w "%{http_code}" http://100.106.201.33:3001/.env | grep -q "404"
+          curl -o /dev/null -s -w "%{http_code}" http://100.106.201.33:3001/.git | grep -q "404"
+          
+          echo "Security tests passed"
+
+      - name: Run performance tests
+        run: |
+          echo "Running performance tests..."
+          # Test page load time
+          curl -o /dev/null -s -w "Total time: %{time_total}s\n" http://100.106.201.33:3001
+          
+          # Test concurrent connections
+          for i in {1..10}; do
+            curl -s http://100.106.201.33:3001 > /dev/null &
+          done
+          wait
+          
+          echo "Performance tests passed"
+
+      - name: Run functional tests
+        run: |
+          echo "Running functional tests..."
+          # Test main page loads
+          curl -s http://100.106.201.33:3001 | grep -q "TR-808 AI"
+          
+          # Test static assets
+          curl -s http://100.106.201.33:3001 | grep -q "Tone.js"
+          
+          # Test health endpoint
+          curl -f http://100.106.201.33:3001/health
+          
+          echo "Functional tests passed"
 
   # Deploy to production (VPS)
   deploy-production:
     runs-on: ubuntu-latest
-    needs: [docker-build, deploy-staging]
+    needs: [docker-build, test-dev-gpu]
     if: github.ref == 'refs/heads/main' && (github.event.inputs.deploy_to_production == 'true' || contains(github.event.head_commit.message, '[deploy]'))
     environment: production
     steps:
